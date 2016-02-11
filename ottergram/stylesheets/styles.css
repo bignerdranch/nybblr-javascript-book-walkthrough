@@ -31,7 +31,7 @@ body {
   background: rgb(149, 194, 215);
 }
 
-a[href='#'] {
+.thumbnail-item a {
   text-decoration: none;
 }
 
