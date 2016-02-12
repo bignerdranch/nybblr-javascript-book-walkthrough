@@ -6,6 +6,11 @@
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css"
       rel="stylesheet">
+    <style>
+      form :focus:required:invalid {
+        border-color: #a94442;
+      }
+    </style>
   </head>
   <body class="container">
     <header>
@@ -17,11 +22,11 @@
           <form data-coffee-order="form">
             <div class="form-group">
               <label for="coffeeOrder">Coffee Order</label>
-              <input class="form-control" name="coffee" id="coffeeOrder" autofocus />
+              <input class="form-control" name="coffee" id="coffeeOrder" autofocus required pattern="[a-zA-Z\s]+" />
             </div>
             <div class="form-group">
               <label for="emailInput">Email</label>
-              <input class="form-control" type="email" name="emailAddress" id="emailInput" value="" placeholder="dr@who.com" />
+              <input class="form-control" type="email" name="emailAddress" id="emailInput" value="" placeholder="dr@who.com" required />
             </div>
             <div class="radio">
               <label>
@@ -71,6 +76,7 @@
     </section>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js" charset="utf-8"></script>
     <script src="scripts/checklist.js" charset="utf-8"></script>
+    <script src="scripts/validation.js"></script>
     <script src="scripts/formhandler.js" charset="utf-8"></script>
     <script src="scripts/datastore.js" charset="utf-8"></script>
     <script src="scripts/truck.js" charset="utf-8"></script>
