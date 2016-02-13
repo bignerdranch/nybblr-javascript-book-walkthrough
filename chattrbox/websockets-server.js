@@ -1,3 +1,4 @@
+/* jshint node: true */
 var WebSocket = require('ws');
 var WebSocketServer = WebSocket.Server;
 var port = 3001;
@@ -16,7 +17,7 @@ ws.on('connection', function(socket) {
   socket.on('message', function(data) {
     console.log('message received: ' + data);
     ws.clients.forEach(function(clientSocket) {
-      clientSocket.send(data)
+      clientSocket.send(data);
     });
     socket.send(data);
   });
