@@ -31,7 +31,7 @@ body {
   background: rgb(149, 194, 215);
 }
 
-a[href='#'] {
+.thumbnail-item a {
   text-decoration: none;
 }
 
@@ -128,7 +128,7 @@ a[href='#'] {
   .thumbnail-item {
     max-width: 260px;
   }
-  
+
   .thumbnail-item + .thumbnail-item {
     margin-top: 2em;
   }
