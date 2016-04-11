@@ -16,8 +16,10 @@
     this.$element.on('click', 'input', function(event) {
       // Why not preventDefault here?
       // Because it would prevent the item from being checked.
-      this.removeRow(event.target.value);
-      fn(event.target.value);
+      fn(event.target.value)
+        .then(function() {
+          this.removeRow(event.target.value);
+        }.bind(this));
       // yep. need `.bind` after this one, otherwise
       // jQuery sets `this` to the `input` and not the instance of `CheckList`
     }.bind(this));
