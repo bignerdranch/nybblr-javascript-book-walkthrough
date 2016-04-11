@@ -2,6 +2,7 @@ var http = require('http');
 var fs = require('fs');
 var path = require('path');
 var extract = require('./extract');
+var wss = require('./websockets-server');
 
 var handleError = function(err, res) {
   res.writeHead(404);
