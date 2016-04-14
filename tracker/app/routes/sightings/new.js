@@ -22,6 +22,10 @@ export default Ember.Route.extend({
     create() {
       var self = this;
       this.get('sighting').save().then(function() {
+        self.send('flash', {
+          alertType: "success",
+          message: "New sighting."
+        });
         self.transitionTo('sightings');
       });
     },
