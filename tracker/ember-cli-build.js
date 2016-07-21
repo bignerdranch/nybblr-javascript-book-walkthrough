@@ -29,6 +29,7 @@ module.exports = function(defaults) {
   // Create paths to bootstrap assets
   // Add assets to app with import
   app.import(bootstrapPath + 'javascripts/bootstrap.js');
+  app.import('bower_components/moment/moment.js');
 
   return app.toTree();
 };

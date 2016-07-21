@@ -1,9 +1,16 @@
-<div class="panel panel-default">
-  <ul class="list-group">
-    {{#each model as |sighting|}}
-      <li class="list-group-item">
-        {{sighting.location}} - {{sighting.sightedAt}}
-      </li>
-    {{/each}}
-  </ul>
+<div class="row">
+  {{#each model as |sighting|}}
+    <div class="col-xs-12 col-sm-3 text-center">
+      <div class="media well">
+        <div class="caption">
+          {{#if sighting.location}}
+            <h3>{{sighting.location}}</h3>
+            <p>{{moment-from sighting.sightedAt}}</p>
+          {{else}}
+            <h3 class="text-danger">Bogus Sighting</h3>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  {{/each}}
 </div>
