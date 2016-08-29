@@ -37,6 +37,7 @@
     "watchify": "^3.7.0"
   },
   "dependencies": {
+    "koa": "^2.0.0-alpha.6",
     "ws": "^1.1.1"
   }
 }
