@@ -3,15 +3,13 @@ var fs = require('fs');
 var extract = require('./extract');
 var wss = require('./websockets-server');
 
-var send = require('koa-send');
+var serve = require('koa-static');
+var compress = require('koa-compress');
 var Koa = require('koa');
 var app = new Koa();
 
-app.use(async (ctx, next) => {
-  console.log('Responding to a request.');
-  var filePath = extract(ctx.request.url);
-  await send(ctx, filePath, { root: __dirname + '/app' });
-});
+app.use(compress());
+app.use(serve('./app'));
 
 var server = http.createServer(app.callback());
 server.listen(3000);
