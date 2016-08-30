@@ -8,21 +8,23 @@ import {
   UserList,
   promptForUsername
 } from './dom';
+import { getJSON } from './fetch';
 
 const FORM_SELECTOR = '[data-chat="chat-form"]';
 const INPUT_SELECTOR = '[data-chat="message-input"]';
 const LIST_SELECTOR = '[data-chat="message-list"]';
 const USER_LIST_SELECTOR = '[data-chat="user-list"]';
 
-let userStore = new UserStore('x-chattrbox/u');
-let username = userStore.get();
-if (!username) {
-  username = promptForUsername();
-  userStore.set(username);
-}
+let username;
 
 class ChatApp {
   constructor() {
+    this.init();
+  }
+  async init() {
+    var data = await getJSON('api/users/me');
+    username = data.email;
+
     this.chatForm = new ChatForm(FORM_SELECTOR, INPUT_SELECTOR);
     this.chatList = new ChatList(LIST_SELECTOR, username);
     this.userList = new UserList(USER_LIST_SELECTOR, username);

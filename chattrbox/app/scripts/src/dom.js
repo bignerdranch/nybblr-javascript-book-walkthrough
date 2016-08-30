@@ -2,6 +2,7 @@ import 'babel-polyfill';
 import $ from 'jquery';
 import md5 from 'crypto-js/md5';
 import moment from 'moment';
+import { getJSON } from './fetch';
 
 function createGravatarUrl(username) {
   let userhash = md5(username);
@@ -86,13 +87,7 @@ export class UserList {
     this.username = username;
   }
   async init() {
-    var request = new Request('api/users', {
-      method: 'GET',
-      mode: 'same-origin',
-      credentials: 'same-origin'
-    });
-    var response = await fetch(request);
-    var users = await response.json();
+    var users = await getJSON('api/users');
     for (let user of users) {
       this.drawUser(user);
     }
