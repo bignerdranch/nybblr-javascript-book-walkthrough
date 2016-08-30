@@ -6,8 +6,7 @@ var extractFilePath = function(url) {
     fileName = url.substring(1);
   }
   console.log('The fileName is: ' + fileName);
-  filePath = path.resolve(__dirname, 'app', fileName);
-  return filePath;
+  return fileName;
 };
 
 module.exports = extractFilePath;
