@@ -86,7 +86,12 @@ export class UserList {
     this.username = username;
   }
   async init() {
-    var response = await fetch('api/users');
+    var request = new Request('api/users', {
+      method: 'GET',
+      mode: 'same-origin',
+      credentials: 'same-origin'
+    });
+    var response = await fetch(request);
     var users = await response.json();
     for (let user of users) {
       this.drawUser(user);
