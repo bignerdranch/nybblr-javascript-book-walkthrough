@@ -7,7 +7,11 @@ var Koa = require('koa');
 var app = new Koa();
 
 app.use(ctx => {
-  ctx.body = 'Hello Koa';
+  console.log('Responding to a request.');
+  var filePath = extract(ctx.request.url);
+  var stream = fs.createReadStream(filePath);
+  ctx.body = stream;
+  ctx.response.remove('Content-Type');
 });
 
 var server = http.createServer(app.callback());
