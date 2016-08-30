@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import $ from 'jquery';
 import md5 from 'crypto-js/md5';
 import moment from 'moment';
@@ -76,5 +77,39 @@ export class ChatList {
         $element.html(ago);
       });
     }, 1000);
+  }
+}
+
+export class UserList {
+  constructor(listSel, username) {
+    this.$list = $(listSel);
+    this.username = username;
+  }
+  async init() {
+    var response = await fetch('api/users');
+    var users = await response.json();
+    for (let user of users) {
+      this.drawUser(user);
+    }
+  }
+  drawUser({ email, name }) {
+    let $userRow = $('<li>', {
+      class: 'user-row',
+      'data-user': email
+    });
+    if (this.username === email) {
+      $messageRow.addClass('me');
+    }
+    let $userName = $('<a>', {
+      href: '#',
+      text: name
+    });
+    let $img = $('<img>', {
+      src: createGravatarUrl(email),
+      title: name
+    });
+    $userRow.append($img);
+    $userRow.append($userName);
+    this.$list.append($userRow);
   }
 }

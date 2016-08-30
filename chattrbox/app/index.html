@@ -5,8 +5,14 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="/stylesheets/styles.css">
   </head>
-  <body class="container chat-wrapper">
+  <body class="container">
+    <nav class="sidebar column">
+      <h2 class="section-header">Participants</h2>
+      <ul class="user-list" data-chat="user-list">
+      </ul>
+    </nav>
 
+    <div class="chat-wrapper column">
     <header class="chat-app-header">
       <h1>Chattrbox</h1>
     </header>
@@ -26,6 +32,7 @@
         </div><!-- /input-group -->
       </form>
     </section>
+    </div>
 
     <script src="/scripts/dist/main.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js" type="text/javascript" charset="utf-8"></script>

@@ -5,12 +5,14 @@ import {
 import {
   ChatForm,
   ChatList,
+  UserList,
   promptForUsername
 } from './dom';
 
 const FORM_SELECTOR = '[data-chat="chat-form"]';
 const INPUT_SELECTOR = '[data-chat="message-input"]';
 const LIST_SELECTOR = '[data-chat="message-list"]';
+const USER_LIST_SELECTOR = '[data-chat="user-list"]';
 
 let userStore = new UserStore('x-chattrbox/u');
 let username = userStore.get();
@@ -23,6 +25,9 @@ class ChatApp {
   constructor() {
     this.chatForm = new ChatForm(FORM_SELECTOR, INPUT_SELECTOR);
     this.chatList = new ChatList(LIST_SELECTOR, username);
+    this.userList = new UserList(USER_LIST_SELECTOR, username);
+
+    this.userList.init();
 
     socket.init('ws://' + location.host);
     socket.registerOpenHandler(() => {

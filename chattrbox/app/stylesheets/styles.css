@@ -5,6 +5,12 @@ form { margin-bottom: 1em; }
         display: flex;
         height: 100%;
         flex-direction: column;
+        flex: 1;
+
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
       }
       .chat-messages {
         flex: 3;
@@ -61,3 +67,60 @@ form { margin-bottom: 1em; }
         font-style: italic;
 /*        display: block; */
       }
+
+.container {
+  display: flex;
+  height: 100%;
+  flex-direction: row;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar {
+  width: 15em;
+  background-color: #222;
+  color: #bbb;
+}
+
+.sidebar .section-header {
+  margin: 1em 1.5rem;
+  font-weight: 400;
+  font-size: 1em;
+  text-transform: uppercase;
+  color: #777;
+}
+
+.user-list {
+  padding: 0;
+  list-style: none;
+}
+
+.user-list li {
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.user-list li:hover {
+  color: #fff;
+  background-color: #555;
+}
+
+.user-list li img {
+  height: 1.5em;
+  display: block;
+  margin-left: 1.5rem;
+}
+
+.user-list li a {
+  color: inherit;
+  padding: 0.5em 1.5rem;
+  display: block;
+  flex: 1;
+}
+
+.user-list li a:hover,
+.user-list li a:focus,
+.user-list li a:active {
+  text-decoration: none;
+}
