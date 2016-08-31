@@ -97,9 +97,6 @@ export class UserList {
       class: 'user-row',
       'data-user': email
     });
-    if (this.username === email) {
-      $messageRow.addClass('me');
-    }
     let $userName = $('<a>', {
       href: '#',
       text: name
