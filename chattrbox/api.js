@@ -1,17 +1,18 @@
+var { User } = require('./db');
 var KoaRouter = require('koa-router');
 
 var api = KoaRouter();
 
 api.get('/users', async (ctx, next) => {
-  ctx.body = [
-    { email: 'clark.kent@bignerdranch.com', name: 'Clark Kent' },
-    { email: 'diana.prince@bignerdranch.com', name: 'Diana Prince' }
-  ];
+  var users = await User.find();
+  ctx.body = users.map(
+    ({ id, email, name }) => ({ id, email, name })
+  );
 });
 
 api.get('/users/me', async (ctx) => {
-  var { email, name } = ctx.state.user;
-  ctx.body = { email, name };
+  var { id, email, name } = ctx.state.user;
+  ctx.body = { id, email, name };
 });
 
 module.exports = api;

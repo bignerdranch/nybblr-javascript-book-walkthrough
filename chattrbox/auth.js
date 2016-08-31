@@ -1,3 +1,4 @@
+var { User } = require('./db');
 var KoaRouter = require('koa-router');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
@@ -18,7 +19,8 @@ module.exports = ({ passport }) => {
       var { domain, displayName: name } = profile._json;
       if (domain === DOMAIN) {
         var email = profile.emails[0].value;
-        done(null, { email, name });
+
+        User.findOrCreate({ email }, { name }, done);
       } else {
         done(new Error('Invalid host domain'));
       }
@@ -26,11 +28,11 @@ module.exports = ({ passport }) => {
   ));
 
   passport.serializeUser((user, done) => {
-    done(null, user);
+    done(null, user.id);
   });
 
-  passport.deserializeUser((user, done) => {
-    done(null, user);
+  passport.deserializeUser((id, done) => {
+    User.findById(id, done);
   });
 
   api.get('/auth/google',
