@@ -15,10 +15,10 @@ module.exports = ({ passport }) => {
       callbackURL: CLIENT_CALLBACK
     },
     (accessToken, refreshToken, profile, done) => {
-      var domain = profile._json.domain;
+      var { domain, displayName: name } = profile._json;
       if (domain === DOMAIN) {
         var email = profile.emails[0].value;
-        done(null, { email });
+        done(null, { email, name });
       } else {
         done(new Error('Invalid host domain'));
       }

@@ -10,8 +10,8 @@ api.get('/users', async (ctx, next) => {
 });
 
 api.get('/users/me', async (ctx) => {
-  var { email } = ctx.state.user;
-  ctx.body = { email };
+  var { email, name } = ctx.state.user;
+  ctx.body = { email, name };
 });
 
 module.exports = api;
