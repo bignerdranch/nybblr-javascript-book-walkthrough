@@ -4,6 +4,7 @@ var extract = require('./extract');
 var wss = require('./websockets-server');
 var api = require('./api');
 var auth = require('./auth');
+var signal = require('./signal');
 
 var serve = require('koa-static');
 var compress = require('koa-compress');
@@ -34,4 +35,5 @@ app.use(mount('/api', api.routes()));
 
 var server = http.createServer(app.callback());
 wss(server);
+signal(server);
 server.listen(3000);
