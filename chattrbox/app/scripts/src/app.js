@@ -11,6 +11,8 @@ import {
 import { getJSON } from './fetch';
 import Signal from './signal';
 import PrivateChat from './private-chat';
+import PrivateChatWindow from './private-chat-window';
+import $ from 'jquery';
 
 const FORM_SELECTOR = '[data-chat="chat-form"]';
 const INPUT_SELECTOR = '[data-chat="message-input"]';
@@ -31,10 +33,16 @@ class ChatApp {
     this.chatList = new ChatList(LIST_SELECTOR, username);
     this.userList = new UserList(USER_LIST_SELECTOR, username);
 
-    this.userList.init();
-
     var signal = Signal(`ws://${location.host}/signal`);
-    var privateChat = new PrivateChat(signal);
+    var privateChat = new PrivateChat(signal, (session) => {
+      new PrivateChatWindow($('body'), session).init();
+    });
+
+    privateChat.listen();
+
+    this.userList.init(async userId => {
+      privateChat.start(userId);
+    });
 
     window.chat = privateChat;
 

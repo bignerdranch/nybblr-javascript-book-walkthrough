@@ -86,16 +86,23 @@ export class UserList {
     this.$list = $(listSel);
     this.username = username;
   }
-  async init() {
+  async init(cb) {
     var users = await getJSON('api/users');
     for (let user of users) {
       this.drawUser(user);
     }
+
+    this.$list.on('click', '.user-row', (e) => {
+      e.preventDefault();
+      var userId = $(e.currentTarget).data('user-id');
+      console.log('clicked on ' + userId);
+      cb(userId);
+    });
   }
-  drawUser({ email, name }) {
+  drawUser({ id, email, name }) {
     let $userRow = $('<li>', {
       class: 'user-row',
-      'data-user': email
+      'data-user-id': id
     });
     let $userName = $('<a>', {
       href: '#',

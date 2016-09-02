@@ -1,10 +1,13 @@
 import { start, receive } from './peer-connection';
 import ChatSession from './chat-session';
 
+const noop = () => {};
+
 export default class PrivateChat {
-  constructor(signal) {
+  constructor(signal, handler = noop) {
     this.signal = signal;
     this.chats = {};
+    this.handler = handler;
   }
   async track(userId, factory) {
     var chat = this.chats[userId];
@@ -13,9 +16,11 @@ export default class PrivateChat {
       this.chats[userId] = chat;
     }
 
+    var channel = await chat.promise;
+
     if (!chat.session) {
-      var channel = await chat.promise;
       chat.session = new ChatSession(userId, channel);
+      this.handler(chat.session);
     }
 
     return chat.session;
