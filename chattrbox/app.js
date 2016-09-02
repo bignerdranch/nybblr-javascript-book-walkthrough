@@ -24,6 +24,9 @@ var { api: authApi, ensure } = auth({ passport });
 
 app.keys = [SESSION_SECRET];
 var sessionParser = convert(session({ key: 'chattrbox.sid' }));
+var extractSession = require('./extract-session')
+  .bind(undefined, sessionParser, app);
+
 app.use(sessionParser);
 
 app.use(passport.initialize());
@@ -37,8 +40,8 @@ app.use(mount('/api', api.routes()));
 
 var server = http.createServer(app.callback());
 
-var verifyClient = VerifyClient(app, sessionParser);
-wss(server, verifyClient);
-signal(server, verifyClient);
+var verifyClient = VerifyClient(extractSession);
+wss(server, verifyClient, extractSession);
+signal(server, verifyClient, extractSession);
 
 server.listen(3000);
