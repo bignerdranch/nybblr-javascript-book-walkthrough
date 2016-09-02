@@ -22,7 +22,8 @@ var SESSION_SECRET = process.env.SESSION_SECRET;
 var { api: authApi, ensure } = auth({ passport });
 
 app.keys = [SESSION_SECRET];
-app.use(convert(session({ key: 'chattrbox.sid' })));
+var sessionParser = convert(session({ key: 'chattrbox.sid' }));
+app.use(sessionParser);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -35,5 +36,5 @@ app.use(mount('/api', api.routes()));
 
 var server = http.createServer(app.callback());
 wss(server);
-signal(server);
+signal(server, sessionParser, app);
 server.listen(3000);
