@@ -5,6 +5,7 @@ var wss = require('./websockets-server');
 var api = require('./api');
 var auth = require('./auth');
 var signal = require('./signal');
+var VerifyClient = require('./verify-client');
 
 var serve = require('koa-static');
 var compress = require('koa-compress');
@@ -35,6 +36,9 @@ app.use(serve('./app'));
 app.use(mount('/api', api.routes()));
 
 var server = http.createServer(app.callback());
-wss(server);
-signal(server, sessionParser, app);
+
+var verifyClient = VerifyClient(app, sessionParser);
+wss(server, verifyClient);
+signal(server, verifyClient);
+
 server.listen(3000);
