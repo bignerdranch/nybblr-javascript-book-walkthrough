@@ -9,7 +9,8 @@ import {
   promptForUsername
 } from './dom';
 import { getJSON } from './fetch';
-import signal from './signal';
+import Signal from './signal';
+import PrivateChat from './private-chat';
 
 const FORM_SELECTOR = '[data-chat="chat-form"]';
 const INPUT_SELECTOR = '[data-chat="message-input"]';
@@ -32,10 +33,10 @@ class ChatApp {
 
     this.userList.init();
 
-    var { send, receive } = signal(`ws://${location.host}/signal`);
+    var signal = Signal(`ws://${location.host}/signal`);
+    var privateChat = new PrivateChat(signal);
 
-    window.sendSignal = send;
-    window.receiveSignal = receive;
+    window.chat = privateChat;
 
     socket.init('ws://' + location.host);
     socket.registerOpenHandler(() => {
