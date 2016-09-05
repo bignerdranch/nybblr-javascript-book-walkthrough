@@ -1,23 +1,27 @@
-var config = {"iceServers":[{"url":"stun:stun.l.google.com:19302"}]};
+var config = {iceServers:[{url:"stun:stun.l.google.com:19302"}]};
 var connection = {
-  'optional': [{'DtlsSrtpKeyAgreement': true}]
+  optional: [{DtlsSrtpKeyAgreement: true}]
 };
 
 var initDataChannel = pc => {
   return pc.createDataChannel('RTCDataChannel', { reliable: true });
 };
 
-var initStream = async pc => {
+var initLocalStream = async pc => {
   try {
     var stream = await navigator.mediaDevices
       .getUserMedia({ audio: true, video: true });
+    pc.addStream(stream);
+    return stream;
   } catch(e) {
     console.log(e);
   }
+};
 
-  pc.addStream(stream);
-
-  return stream;
+var initRemoteStream = pc => {
+  return new Promise(resolve => {
+    pc.onaddstream = ({ stream }) => resolve(stream);
+  });
 };
 
 var negotiate = () => {
@@ -26,7 +30,7 @@ var negotiate = () => {
   var pc = new RTCPeerConnection(config, connection);
 
   var description = () => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (iced) {
         resolve(pc.localDescription);
         return;
@@ -56,8 +60,6 @@ var negotiate = () => {
     return description();
   };
 
-  description();
-
   return {
     pc,
     createOffer,
@@ -66,35 +68,50 @@ var negotiate = () => {
   };
 };
 
-export async function start({ send, awaitReply }, userId) {
-  var {
-    pc,
-    createOffer,
-    createAnswer,
-    description
-  } = negotiate();
+var outgoingChannel = (pc) => {
+  return new Promise((resolve) => {
+    var channel = initDataChannel(pc);
 
-  var channel = initDataChannel(pc);
-  var localStream = await initStream(pc);
-
-  var streamPromise = new Promise(resolve => {
-    pc.onaddstream = ({ stream }) => resolve(stream);
-  });
-
-  var channelPromise = new Promise((resolve, reject) => {
     channel.onopen = e => {
       resolve(channel);
     };
-
-    createOffer(pc).then(offer => {
-      send(userId, offer);
-      awaitReply(userId).then(answer => {
-        pc.setRemoteDescription(answer);
-      }, reject);
-    }, reject);
   });
+};
 
-  var remoteStream = await streamPromise;
+var incomingChannel = (pc) => {
+  return new Promise((resolve) => {
+    pc.ondatachannel = e => {
+      resolve(e.channel || e);
+    };
+  });
+};
+
+var outgoing = async ({ send, awaitReply }, { pc, createOffer }, userId) => {
+  var offer = await createOffer();
+  send(userId, offer);
+  var answer = await awaitReply(userId);
+  pc.setRemoteDescription(answer);
+};
+
+var incoming = async ({ send }, { pc, createAnswer }, userId, offer) => {
+  pc.setRemoteDescription(offer);
+  var answer = await createAnswer(pc);
+  send(userId, answer);
+};
+
+export async function start(signal, userId, offer) {
+  var negotiable = negotiate();
+  var { pc } = negotiable;
+
+  var localPromise = initLocalStream(pc);
+  var remotePromise = initRemoteStream(pc);
+  var channelPromise = offer ? incomingChannel(pc) : outgoingChannel(pc);
+
+  var localStream = await localPromise;
+
+  (offer ? incoming : outgoing)(signal, negotiable, userId, offer);
+
+  var remoteStream = await remotePromise;
   var channel = await channelPromise;
 
   return {
@@ -103,39 +120,3 @@ export async function start({ send, awaitReply }, userId) {
     channel
   };
 };
-
-export async function receive({ send, awaitReply }, { from: userId, msg: offer }) {
-  var {
-    pc,
-    createOffer,
-    createAnswer,
-    description
-  } = negotiate();
-
-  var localStream = await initStream(pc);
-
-  var streamPromise = new Promise(resolve => {
-    pc.onaddstream = ({ stream }) => resolve(stream);
-  });
-
-  var channelPromise = new Promise((resolve, reject) => {
-    pc.ondatachannel = e => {
-      var channel = e.channel || e;
-      resolve(channel);
-    };
-
-    pc.setRemoteDescription(offer);
-    createAnswer(pc).then(answer => {
-      send(userId, answer);
-    }, reject);
-  });
-
-  var remoteStream = await streamPromise;
-  var channel = await channelPromise;
-
-  return {
-    localStream,
-    remoteStream,
-    channel
-  };
-}

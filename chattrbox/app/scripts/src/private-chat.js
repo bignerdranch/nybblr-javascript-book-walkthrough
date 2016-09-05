@@ -1,4 +1,4 @@
-import { start, receive } from './peer-connection';
+import { start } from './peer-connection';
 import ChatSession from './chat-session';
 
 const noop = () => {};
@@ -31,9 +31,9 @@ export default class PrivateChat {
   }
   listen() {
     var signal = this.signal;
-    return signal.receive((from, msg) => {
-      this.track(from,
-        () => receive(signal, { from, msg }));
+    return signal.receive((userId, offer) => {
+      this.track(userId,
+        () => start(signal, userId, offer));
     });
   }
 }
