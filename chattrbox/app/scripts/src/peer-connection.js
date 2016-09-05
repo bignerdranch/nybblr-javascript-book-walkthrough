@@ -7,6 +7,19 @@ var initDataChannel = pc => {
   return pc.createDataChannel('RTCDataChannel', { reliable: true });
 };
 
+var initStream = async pc => {
+  try {
+    var stream = await navigator.mediaDevices
+      .getUserMedia({ audio: true, video: true });
+  } catch(e) {
+    console.log(e);
+  }
+
+  pc.addStream(stream);
+
+  return stream;
+};
+
 var negotiate = () => {
   var iced = false;
 
@@ -53,7 +66,7 @@ var negotiate = () => {
   };
 };
 
-export function start({ send, awaitReply }, userId) {
+export async function start({ send, awaitReply }, userId) {
   var {
     pc,
     createOffer,
@@ -61,9 +74,14 @@ export function start({ send, awaitReply }, userId) {
     description
   } = negotiate();
 
-  return new Promise((resolve, reject) => {
-    var channel = initDataChannel(pc);
+  var channel = initDataChannel(pc);
+  var localStream = await initStream(pc);
 
+  var streamPromise = new Promise(resolve => {
+    pc.onaddstream = ({ stream }) => resolve(stream);
+  });
+
+  var channelPromise = new Promise((resolve, reject) => {
     channel.onopen = e => {
       resolve(channel);
     };
@@ -75,9 +93,18 @@ export function start({ send, awaitReply }, userId) {
       }, reject);
     }, reject);
   });
+
+  var remoteStream = await streamPromise;
+  var channel = await channelPromise;
+
+  return {
+    localStream,
+    remoteStream,
+    channel
+  };
 };
 
-export function receive({ send, awaitReply }, { from: userId, msg: offer }) {
+export async function receive({ send, awaitReply }, { from: userId, msg: offer }) {
   var {
     pc,
     createOffer,
@@ -85,7 +112,13 @@ export function receive({ send, awaitReply }, { from: userId, msg: offer }) {
     description
   } = negotiate();
 
-  return new Promise((resolve, reject) => {
+  var localStream = await initStream(pc);
+
+  var streamPromise = new Promise(resolve => {
+    pc.onaddstream = ({ stream }) => resolve(stream);
+  });
+
+  var channelPromise = new Promise((resolve, reject) => {
     pc.ondatachannel = e => {
       var channel = e.channel || e;
       resolve(channel);
@@ -96,4 +129,13 @@ export function receive({ send, awaitReply }, { from: userId, msg: offer }) {
       send(userId, answer);
     }, reject);
   });
+
+  var remoteStream = await streamPromise;
+  var channel = await channelPromise;
+
+  return {
+    localStream,
+    remoteStream,
+    channel
+  };
 }
