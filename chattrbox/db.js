@@ -1,10 +1,10 @@
-var MONGODB_URL = process.env.MONGODB_URL;
+var MONGODB_URI = process.env.MONGODB_URI;
 
 var mongoose = require('mongoose');
 var findOrCreate = require('mongoose-findorcreate');
 
 mongoose.Promise = Promise;
-mongoose.connect(MONGODB_URL);
+mongoose.connect(MONGODB_URI);
 
 var Schema = mongoose.Schema,
   ObjectId = Schema.ObjectId;
