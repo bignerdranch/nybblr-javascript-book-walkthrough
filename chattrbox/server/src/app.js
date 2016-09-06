@@ -1,3 +1,5 @@
+var port = process.env.PORT || 3000;
+
 var http = require('http');
 var fs = require('fs');
 var extract = require('./extract');
@@ -44,4 +46,4 @@ var verifyClient = VerifyClient(extractSession);
 wss(server, verifyClient, extractSession);
 signal(server, verifyClient, extractSession);
 
-server.listen(3000);
+server.listen(port);

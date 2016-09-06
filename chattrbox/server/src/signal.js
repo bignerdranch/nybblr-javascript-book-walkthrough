@@ -2,7 +2,12 @@ var WebSocketServer = require('ws').Server;
 
 module.exports = (server, verifyClient, extractSession) => {
   var clients = {};
-  var wss = new WebSocketServer({ server, verifyClient, path: '/signal' });
+  var wss = new WebSocketServer({
+    server,
+    verifyClient,
+    path: '/signal',
+    keepAlive: true
+  });
   wss.on('connection', async (ws) => {
     console.log('signal connection established');
     var session = await extractSession(ws.upgradeReq);

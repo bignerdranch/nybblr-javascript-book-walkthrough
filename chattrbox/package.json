@@ -13,8 +13,7 @@
     "build-server": "babel server/src -d server/dist",
     "build-client": "browserify -d app/scripts/src/main.js -o app/scripts/dist/main.js",
     "build": "npm run build-server && npm run build-client",
-    "watch": "watchify -v -d app/scripts/src/main.js -o app/scripts/dist/main.js",
-    "postinstall": "npm run build"
+    "watch": "watchify -v -d app/scripts/src/main.js -o app/scripts/dist/main.js"
   },
   "babel": {
     "presets": [
@@ -66,6 +65,6 @@
     "mongoose": "^4.5.10",
     "mongoose-findorcreate": "^0.1.2",
     "passport-google-oauth": "^1.0.0",
-    "ws": "^1.1.1"
+    "ws": "FlorianBELLAZOUZ/ws#KeepAlive"
   }
 }

@@ -19,6 +19,9 @@ const INPUT_SELECTOR = '[data-chat="message-input"]';
 const LIST_SELECTOR = '[data-chat="message-list"]';
 const USER_LIST_SELECTOR = '[data-chat="user-list"]';
 
+const secure = location.protocol === 'https:';
+const WS_HOST = `${secure ? 'wss' : 'ws'}://${location.host}`;
+
 let username;
 
 class ChatApp {
@@ -33,7 +36,7 @@ class ChatApp {
     this.chatList = new ChatList(LIST_SELECTOR, username);
     this.userList = new UserList(USER_LIST_SELECTOR, username);
 
-    var signal = Signal(`ws://${location.host}/signal`);
+    var signal = Signal(`${WS_HOST}/signal`);
     var privateChat = new PrivateChat(signal, (session) => {
       new PrivateChatWindow($('body'), session).init();
     });
@@ -46,7 +49,7 @@ class ChatApp {
 
     window.chat = privateChat;
 
-    socket.init('ws://' + location.host);
+    socket.init(WS_HOST);
     socket.registerOpenHandler(() => {
       this.chatForm.init((data) => {
         let message = new ChatMessage({
