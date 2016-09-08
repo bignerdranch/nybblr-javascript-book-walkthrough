@@ -47,8 +47,6 @@ class ChatApp {
       privateChat.start(userId);
     });
 
-    window.chat = privateChat;
-
     socket.init(WS_HOST);
     socket.registerOpenHandler(() => {
       this.chatForm.init((data) => {

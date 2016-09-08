@@ -37,10 +37,10 @@ export default class PrivateChatWindow {
       list.drawMessage(data);
     });
 
-    var $local = $el.find('[data-chat="local-stream"]')[0];
-    var $remote = $el.find('[data-chat="remote-stream"]')[0];
+    var $local = $el.find('[data-chat="local-stream"]');
+    var $remote = $el.find('[data-chat="remote-stream"]');
 
-    $local.srcObject = this.session.local;
-    $remote.srcObject = this.session.remote;
+    $local[0].srcObject = this.session.local;
+    $remote[0].srcObject = this.session.remote;
   }
 }

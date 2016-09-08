@@ -2,7 +2,6 @@ var port = process.env.PORT || 3000;
 
 var http = require('http');
 var fs = require('fs');
-var extract = require('./extract');
 var wss = require('./websockets-server');
 var api = require('./api');
 var auth = require('./auth');

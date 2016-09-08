@@ -3,7 +3,7 @@ var KoaRouter = require('koa-router');
 
 var api = KoaRouter();
 
-api.get('/users', async (ctx, next) => {
+api.get('/users', async (ctx) => {
   var users = await User.find();
   ctx.body = users.map(
     ({ id, email, name }) => ({ id, email, name })
