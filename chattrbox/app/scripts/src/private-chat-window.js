@@ -36,7 +36,7 @@ export default class PrivateChatWindow {
       list.drawMessage(data);
     });
 
-    this.session.receive(data => {
+    this.session.on('message', data => {
       list.drawMessage(data);
     });
 

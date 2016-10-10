@@ -31,7 +31,7 @@ export default class PrivateChat {
   }
   listen() {
     var signal = this.signal;
-    return signal.receive((userId, offer) => {
+    return signal.on('message', (userId, offer) => {
       this.track(userId,
         () => start(signal, userId, offer));
     });

@@ -1,30 +1,19 @@
-require('webrtc-adapter');
+import EventEmitter from 'wolfy87-eventemitter';
 
 export default function signal(url) {
+  var events = new EventEmitter();
+
   let socket = new WebSocket(url);
   console.log('connecting to signaling server...');
-
-  let onmessage = () => {};
-
-  let replyHandlers = {};
-  let onreply = (from, msg) => {
-    let handler = replyHandlers[from];
-    delete replyHandlers[from];
-    handler && handler(msg);
-  };
 
   socket.onopen = () => {
     console.log('signal open');
     socket.onmessage = (e) => {
       console.log('signal received: ' + e.data);
       let { from, msg } = JSON.parse(e.data);
-      onmessage(from, msg);
-      onreply(from, msg);
+      events.emit('message', from, msg);
+      events.emit(`reply/${from}`, msg);
     };
-  };
-
-  var receive = (cb) => {
-    onmessage = cb;
   };
 
   var send = (to, msg) => {
@@ -33,14 +22,13 @@ export default function signal(url) {
 
   var awaitReply = (userId) => {
     return new Promise((resolve) => {
-      replyHandlers[userId] = resolve;
+      events.once(`reply/${userId}`, resolve);
     });
   };
 
-  return {
+  return Object.assign(events, {
     socket,
     send,
-    receive,
     awaitReply
-  };
+  });
 }

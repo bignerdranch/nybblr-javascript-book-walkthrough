@@ -1,3 +1,5 @@
+require('webrtc-adapter');
+
 var config = {iceServers:[{url:"stun:stun.l.google.com:19302"}]};
 var connection = {
   optional: [{DtlsSrtpKeyAgreement: true}]
