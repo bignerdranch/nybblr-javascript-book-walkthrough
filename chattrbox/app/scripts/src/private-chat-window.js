@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import { ChatList, ChatForm } from './dom';
 
-const template = $('[data-template="chat"]').html();
+const template = document.querySelector('#chat-template').content;
 
 export default class PrivateChatWindow {
   constructor($parent, session) {
@@ -9,12 +9,15 @@ export default class PrivateChatWindow {
     this.session = session;
   }
   init() {
-    var $el = $(template);
-    $el.find('[data-chat="user-name"]')
-      .text(this.session.userId);
-    this.$parent.append($el);
+    var clone = template.cloneNode(true);
+    var el = clone.firstElementChild;
+    this.$parent.append(clone);
+    var $el = $(el);
 
     this.$el = $el;
+
+    $el.find('[data-chat="user-name"]')
+      .text(this.session.userId);
 
     var $messages = $el.find('[data-chat="message-list"]');
     var list = new ChatList($messages, '');
@@ -37,10 +40,10 @@ export default class PrivateChatWindow {
       list.drawMessage(data);
     });
 
-    var $local = $el.find('[data-chat="local-stream"]');
-    var $remote = $el.find('[data-chat="remote-stream"]');
+    var local = el.querySelector('[data-chat="local-stream"]');
+    var remote = el.querySelector('[data-chat="remote-stream"]');
 
-    $local[0].srcObject = this.session.local;
-    $remote[0].srcObject = this.session.remote;
+    local.srcObject = this.session.local;
+    remote.srcObject = this.session.remote;
   }
 }
