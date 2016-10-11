@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import socket from './ws-client';
 import {
   UserStore
