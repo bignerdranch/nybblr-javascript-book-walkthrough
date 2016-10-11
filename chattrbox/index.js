@@ -1,5 +1,6 @@
 var http = require('http');
 var fs = require('fs');
+var zlib = require('zlib');
 var extract = require('./extract');
 var wss = require('./websockets-server');
 
@@ -10,7 +11,9 @@ app.use(ctx => {
   console.log('Responding to a request.');
   var filePath = extract(ctx.request.url);
   var stream = fs.createReadStream(filePath);
-  ctx.body = stream;
+  var gzipped = zlib.createGzip();
+  ctx.body = stream.pipe(gzipped);
+  ctx.response.set('Content-Encoding', 'gzip');
   ctx.response.remove('Content-Type');
 });
 
