@@ -7,8 +7,10 @@ var wss = require('./websockets-server');
 
 var Koa = require('koa');
 var send = require('koa-send');
+var compress = require('koa-compress');
 var app = new Koa();
 
+app.use(compress());
 app.use(async ctx => {
   console.log('Responding to a request.');
   var filePath = extract(ctx.request.url);
