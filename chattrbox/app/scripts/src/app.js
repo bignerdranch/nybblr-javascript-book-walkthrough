@@ -1,5 +1,6 @@
 import 'babel-polyfill';
 import socket from './ws-client';
+import Signal from './signal';
 import {
   UserStore
 } from './storage';
@@ -16,6 +17,8 @@ const INPUT_SELECTOR = '[data-chat="message-input"]';
 const LIST_SELECTOR = '[data-chat="message-list"]';
 const USER_LIST_SELECTOR = '[data-chat="user-list"]';
 
+const WS_HOST = `ws://${location.host}`;
+
 let username;
 
 class ChatApp {
@@ -24,15 +27,21 @@ class ChatApp {
   }
   async init() {
     var user = await getJSON('api/users/me');
+    console.log('Current user:');
+    console.log(user);
+
     username = user.email;
 
     this.chatForm = new ChatForm(FORM_SELECTOR, INPUT_SELECTOR);
     this.chatList = new ChatList(LIST_SELECTOR, username);
     this.userList = new UserList(USER_LIST_SELECTOR, username);
 
+    var signal = Signal(`${WS_HOST}/signal`);
+    window.signal = signal;
+
     this.userList.init();
 
-    socket.init('ws://' + location.host);
+    socket.init(WS_HOST);
     socket.registerOpenHandler(() => {
       this.chatForm.init((data) => {
         let message = new ChatMessage({
