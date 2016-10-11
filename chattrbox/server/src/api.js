@@ -1,10 +1,11 @@
 var api = require('koa-router')();
+var { User } = require('./db');
 
 api.get('/users', async ctx => {
-  ctx.body = [
-    { id: 1, email: 'clark.kent@bignerdranch.com', name: 'Clark Kent' },
-    { id: 2, email: 'diana.prince@bignerdranch.com', name: 'Diana Prince' }
-  ];
+  var users = await User.find();
+  ctx.body = users.map(
+    ({ id, email, name }) => ({ id, email, name })
+  );
 });
 
 api.get('/users/me', async ctx => {

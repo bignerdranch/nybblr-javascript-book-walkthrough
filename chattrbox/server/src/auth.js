@@ -1,5 +1,6 @@
 var KoaRouter = require('koa-router');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var { User } = require('./db');
 
 var CLIENT_ID = process.env.OAUTH_ID;
 var CLIENT_SECRET = process.env.OAUTH_SECRET;
@@ -14,16 +15,16 @@ module.exports = ({ passport }) => {
     (accessToken, refreshToken, profile, done) => {
       var email = profile.emails[0].value;
       var name = profile.displayName;
-      done(null, { email, name });
+      User.findOrCreate({ email }, { name }, done);
     }
   ));
 
   passport.serializeUser((user, done) => {
-    done(null, user);
+    done(null, user.id);
   });
 
-  passport.deserializeUser((user, done) => {
-    done(null, user);
+  passport.deserializeUser((id, done) => {
+    User.findById(id, done);
   });
 
   var api = KoaRouter();
