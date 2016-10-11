@@ -10,5 +10,6 @@ app.use(compress());
 app.use(serve('./app'));
 
 var server = http.createServer(app.callback());
+wss(server);
 
 server.listen(3000);
