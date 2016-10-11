@@ -1,5 +1,6 @@
 var http = require('http');
 var wss = require('./websockets-server');
+var signal = require('./signal');
 var api = require('./api');
 var auth = require('./auth');
 var VerifyClient = require('./verify-client');
@@ -44,5 +45,6 @@ var server = http.createServer(app.callback());
 
 var verifyClient = VerifyClient(extractSession);
 wss(server, verifyClient);
+signal(server, verifyClient, extractSession);
 
 server.listen(3000);

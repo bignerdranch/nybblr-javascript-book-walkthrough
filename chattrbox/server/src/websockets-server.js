@@ -3,7 +3,11 @@ var WebSocketServer = WebSocket.Server;
 var { Message } = require('./db');
 
 module.exports = (server, verifyClient) => {
-  var ws = new WebSocketServer({ server, verifyClient });
+  var ws = new WebSocketServer({
+    server,
+    verifyClient,
+    path: '/'
+  });
   console.log('websockets server started');
   ws.on('connection', async function(socket) {
     console.log('client connection established');
