@@ -2,6 +2,7 @@ var http = require('http');
 var wss = require('./websockets-server');
 var api = require('./api');
 var auth = require('./auth');
+var VerifyClient = require('./verify-client');
 
 var Koa = require('koa');
 var compress = require('koa-compress');
@@ -17,7 +18,11 @@ var SESSION_SECRET = process.env.SESSION_SECRET;
 var app = new Koa();
 
 app.keys = [SESSION_SECRET];
-app.use(convert(session({ key: 'chattrbox.sid' })));
+var sessionParser = convert(session({ key: 'chattrbox.sid' }));
+app.use(sessionParser);
+
+var extractSession = require('./extract-session')
+  .bind(undefined, sessionParser, app);
 
 var authApi = auth({ passport });
 
@@ -31,6 +36,8 @@ app.use(serve('./app'));
 app.use(mount('/api', api.routes()));
 
 var server = http.createServer(app.callback());
-wss(server);
+
+var verifyClient = VerifyClient(extractSession);
+wss(server, verifyClient);
 
 server.listen(3000);

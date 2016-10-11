@@ -1,8 +1,8 @@
 var WebSocket = require('ws');
 var WebSocketServer = WebSocket.Server;
 
-module.exports = (server) => {
-  var ws = new WebSocketServer({ server });
+module.exports = (server, verifyClient) => {
+  var ws = new WebSocketServer({ server, verifyClient });
   var messages = [];
   console.log('websockets server started');
   ws.on('connection', function(socket) {
