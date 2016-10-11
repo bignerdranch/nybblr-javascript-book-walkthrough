@@ -5,8 +5,14 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="/stylesheets/styles.css">
   </head>
-  <body class="container chat-wrapper">
+  <body class="container">
+    <nav class="sidebar column">
+      <h2 class="section-header">Participants</h2>
+      <ul class="user-list" data-chat="user-list">
+      </ul>
+    </nav>
 
+    <div class="chat-wrapper column">
     <header class="chat-app-header">
       <h1>Chattrbox</h1>
     </header>
@@ -26,7 +32,36 @@
         </div><!-- /input-group -->
       </form>
     </section>
+    </div>
 
+    <template id="chat-template">
+      <div class="chat-wrapper private-chat-wrapper column">
+        <section class="chat-video">
+          <video class="local" data-chat="local-stream" autoplay muted></video>
+          <video class="remote" data-chat="remote-stream" autoplay></video>
+        </section>
+
+        <header class="chat-app-header">
+          <h1>Private chat with <span data-chat="user-name"></span></h1>
+        </header>
+
+        <div class="panel panel-default chat-messages">
+          <ul class="panel-body chat-message-list" data-chat="message-list"></ul>
+        </div>
+
+        <section class="chat-input">
+          <form data-chat="chat-form" class="cb-container">
+            <div class="input-group">
+              <label for="js-message-input" class="sr-only">Message:</label>
+              <input type="text" class="form-control" data-chat="message-input" autofocus>
+              <span class="input-group-btn">
+                <input class="btn btn-default" type="submit" value="↵"></input>
+              </span>
+            </div>
+          </form>
+        </section>
+      </div>
+    </template>
     <script src="/scripts/dist/main.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js" type="text/javascript" charset="utf-8"></script>
   </body>
