@@ -7,4 +7,9 @@ api.get('/users', async ctx => {
   ];
 });
 
+api.get('/users/me', async ctx => {
+  var { id, email, name } = ctx.state.user;
+  ctx.body = { id, email, name };
+});
+
 module.exports = api;
