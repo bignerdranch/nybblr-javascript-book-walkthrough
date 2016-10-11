@@ -11,6 +11,7 @@ import {
   promptForUsername
 } from './dom';
 import { getJSON } from './fetch';
+import { start } from './peer-connection';
 
 const FORM_SELECTOR = '[data-chat="chat-form"]';
 const INPUT_SELECTOR = '[data-chat="message-input"]';
@@ -38,6 +39,7 @@ class ChatApp {
 
     var signal = Signal(`${WS_HOST}/signal`);
     window.signal = signal;
+    window.start = start;
 
     this.userList.init();
 

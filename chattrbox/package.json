@@ -38,6 +38,7 @@
     "moment": "^2.14.1",
     "nodemon": "^1.9.2",
     "watchify": "^3.7.0",
+    "webrtc-adapter": "^2.0.4",
     "wolfy87-eventemitter": "^5.1.0"
   },
   "dependencies": {
