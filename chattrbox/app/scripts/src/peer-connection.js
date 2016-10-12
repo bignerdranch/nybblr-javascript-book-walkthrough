@@ -46,6 +46,23 @@ var incomingChannel = pc => {
   });
 };
 
+var initLocalStream = async pc => {
+  try {
+    var stream = await navigator.mediaDevices
+      .getUserMedia({ audio: true, video: true });
+    pc.addStream(stream);
+    return stream;
+  } catch(e) {
+    console.log(e);
+  }
+};
+
+var initRemoteStream = pc => {
+  return new Promise(resolve => {
+    pc.onaddstream = ({ stream }) => resolve(stream);
+  });
+};
+
 var outgoing = async ({ send, awaitReply }, pc, userId) => {
   var offer = await createOffer(pc);
   send(userId, offer);
@@ -62,13 +79,20 @@ var incoming = async ({ send }, pc, userId, offer) => {
 export async function start(signal, userId, offer) {
   var pc = new RTCPeerConnection(config);
 
+  var localPromise = initLocalStream(pc);
+  var remotePromise = initRemoteStream(pc);
   var channelPromise = offer ? incomingChannel(pc) : outgoingChannel(pc);
+
+  var local = await localPromise;
 
   (offer ? incoming : outgoing)(signal, pc, userId, offer);
 
+  var remote = await remotePromise;
   var channel = await channelPromise;
 
   return {
+    local,
+    remote,
     channel
   };
 };

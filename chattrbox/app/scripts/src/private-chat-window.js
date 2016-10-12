@@ -21,6 +21,12 @@ export default class PrivateChatWindow {
     var form = chat.querySelector('[data-chat="chat-form"]');
     var input = chat.querySelector('[data-chat="message-input"]');
 
+    var local = chat.querySelector('[data-chat="local-stream"]');
+    var remote = chat.querySelector('[data-chat="remote-stream"]');
+
+    local.srcObject = this.session.local;
+    remote.srcObject = this.session.remote;
+
     this.parent.appendChild(chat);
 
     var list = new ChatList(messages, currentUser.email);
