@@ -10,6 +10,7 @@ import {
 } from './dom';
 import { start } from './peer-connection';
 import PrivateChatManager from './private-chat-manager';
+import PrivateChatWindow from './private-chat-window';
 
 const FORM_SELECTOR = '[data-chat="chat-form"]';
 const INPUT_SELECTOR = '[data-chat="message-input"]';
@@ -41,7 +42,7 @@ class ChatApp {
     window.start = start;
 
     var privateChat = new PrivateChatManager(signal, session => {
-      console.log(session);
+      new PrivateChatWindow('body', session, store).init();
     });
     privateChat.listen();
 
