@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import { ChatList, ChatForm } from './dom';
+import { ChatMessage } from './app';
 
 const template = document.querySelector('#chat-template').content;
 
@@ -44,7 +45,9 @@ export default class PrivateChatWindow {
     });
 
     this.session.on('message', data => {
-      list.drawMessage(data);
+      let message = new ChatMessage(data);
+      message.notify();
+      list.drawMessage(message.serialize());
     });
   }
 }

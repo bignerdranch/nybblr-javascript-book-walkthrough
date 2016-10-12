@@ -27,6 +27,8 @@ class ChatApp {
     this.init();
   }
   async init() {
+    Notification.requestPermission();
+
     var store = new Store();
     var user = await store.currentUser();
     console.log('Current user:');
@@ -64,11 +66,12 @@ class ChatApp {
     socket.registerMessageHandler((data) => {
       console.log(data);
       let message = new ChatMessage(data);
+      message.notify();
       this.chatList.drawMessage(message.serialize());
     });
   }
 }
-class ChatMessage {
+export class ChatMessage {
   constructor({
     message: m,
     user: u = username,
@@ -84,6 +87,18 @@ class ChatMessage {
       message: this.message,
       timestamp: this.timestamp
     };
+  }
+  notify() {
+    if (this.user === username) { return; }
+    var notification = new Notification(this.user, {
+      body: this.message
+    });
+
+    setTimeout(() => {
+      notification.close();
+    }, 3000);
+
+    return notification;
   }
 }
 export default ChatApp;
