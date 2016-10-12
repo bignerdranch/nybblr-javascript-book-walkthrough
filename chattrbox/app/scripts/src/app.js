@@ -17,7 +17,8 @@ const INPUT_SELECTOR = '[data-chat="message-input"]';
 const LIST_SELECTOR = '[data-chat="message-list"]';
 const USER_LIST_SELECTOR = '[data-chat="user-list"]';
 
-const WS_HOST = `ws://${location.host}`;
+const secure = location.protocol === 'https:';
+const WS_HOST = `${secure ? 'wss' : 'ws'}://${location.host}`;
 
 let username;
 

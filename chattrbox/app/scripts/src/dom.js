@@ -4,7 +4,7 @@ import moment from 'moment';
 
 function createGravatarUrl(username) {
   let userhash = md5(username);
-  return `http://www.gravatar.com/avatar/${userhash.toString()}`;
+  return `https://www.gravatar.com/avatar/${userhash.toString()}`;
 }
 
 export function promptForUsername() {
