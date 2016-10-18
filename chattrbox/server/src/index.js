@@ -12,13 +12,18 @@ var mount = require('koa-mount');
 var passport = require('koa-passport');
 var convert = require('koa-convert');
 var session = require('koa-generic-session');
+var MongoStore = require('koa-generic-session-mongo')
 
 var SESSION_SECRET = process.env.SESSION_SECRET;
+var MONGODB_URI = process.env.MONGODB_URI;
 
 var app = new Koa();
 
 app.keys = [SESSION_SECRET];
-var sessionParser = convert(session({ key: 'chattrbox.sid' }));
+var sessionParser = convert(session({
+  key: 'chattrbox.sid',
+  store: new MongoStore({ url: MONGODB_URI })
+}));
 app.use(sessionParser);
 
 var extractSession = require('./extract-session')
