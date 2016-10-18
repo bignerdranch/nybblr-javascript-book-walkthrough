@@ -16,4 +16,15 @@ UserSchema.plugin(findOrCreate);
 
 var User = mongoose.model('User', UserSchema);
 
-module.exports = { User };
+var MessageSchema = new Schema({
+  user: String,
+  message: String,
+  timestamp: Number
+});
+
+var Message = mongoose.model('Message', MessageSchema);
+
+module.exports = {
+  User,
+  Message
+};
