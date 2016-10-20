@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import md5 from 'crypto-js/md5';
 import moment from 'moment';
+import { getJSON } from './fetch';
 
 function createGravatarUrl(username) {
   let userhash = md5(username);
@@ -76,5 +77,42 @@ export class ChatList {
         $element.html(ago);
       });
     }, 1000);
+  }
+}
+
+export class UserList {
+  constructor(listSel, username) {
+    this.$list = $(listSel);
+    this.username = username;
+  }
+  async init(cb) {
+    var users = await getJSON('api/users');
+    for (let user of users) {
+      this.drawUser(user);
+    }
+
+    this.$list.on('click', '.user-row', (e) => {
+      e.preventDefault();
+      var userId = $(e.currentTarget).data('user-id');
+      console.log('clicked on ' + userId);
+      cb && cb(userId);
+    });
+  }
+  drawUser({ id, email, name }) {
+    let $userRow = $('<li>', {
+      class: 'user-row',
+      'data-user-id': id
+    });
+    let $userName = $('<a>', {
+      href: '#',
+      text: name
+    });
+    let $img = $('<img>', {
+      src: createGravatarUrl(email),
+      title: name
+    });
+    $userRow.append($img);
+    $userRow.append($userName);
+    this.$list.append($userRow);
   }
 }
