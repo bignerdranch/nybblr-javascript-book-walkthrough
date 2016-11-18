@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import md5 from 'crypto-js/md5';
 import moment from 'moment';
-import { getJSON } from './fetch';
 
 function createGravatarUrl(username) {
   let userhash = md5(username);
@@ -81,14 +80,18 @@ export class ChatList {
 }
 
 export class UserList {
-  constructor(listSel, username) {
+  constructor(listSel, username, store) {
     this.$list = $(listSel);
     this.username = username;
+    this.store = store;
   }
   async init(cb) {
-    var users = await getJSON('api/users');
+    var users = await this.store.users();
+    var me = await this.store.currentUser();
     for (let user of users) {
-      this.drawUser(user);
+      if (user.id !== me.id) {
+        this.drawUser(user);
+      }
     }
 
     this.$list.on('click', '.user-row', (e) => {

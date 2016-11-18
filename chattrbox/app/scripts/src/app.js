@@ -1,16 +1,13 @@
 import 'babel-polyfill';
 import socket from './ws-client';
 import Signal from './signal';
-import {
-  UserStore
-} from './storage';
+import Store from './store';
 import {
   ChatForm,
   ChatList,
   UserList,
   promptForUsername
 } from './dom';
-import { getJSON } from './fetch';
 import { start } from './peer-connection';
 import PrivateChatManager from './private-chat-manager';
 
@@ -28,7 +25,8 @@ class ChatApp {
     this.init();
   }
   async init() {
-    var user = await getJSON('api/users/me');
+    var store = new Store();
+    var user = await store.currentUser();
     console.log('Current user:');
     console.log(user);
 
@@ -36,7 +34,7 @@ class ChatApp {
 
     this.chatForm = new ChatForm(FORM_SELECTOR, INPUT_SELECTOR);
     this.chatList = new ChatList(LIST_SELECTOR, username);
-    this.userList = new UserList(USER_LIST_SELECTOR, username);
+    this.userList = new UserList(USER_LIST_SELECTOR, username, store);
 
     var signal = Signal(`${WS_HOST}/signal`);
     window.signal = signal;
