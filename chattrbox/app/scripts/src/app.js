@@ -12,6 +12,7 @@ import {
 } from './dom';
 import { getJSON } from './fetch';
 import { start } from './peer-connection';
+import PrivateChatManager from './private-chat-manager';
 
 const FORM_SELECTOR = '[data-chat="chat-form"]';
 const INPUT_SELECTOR = '[data-chat="message-input"]';
@@ -41,7 +42,14 @@ class ChatApp {
     window.signal = signal;
     window.start = start;
 
-    this.userList.init();
+    var privateChat = new PrivateChatManager(signal, session => {
+      console.log(session);
+    });
+    privateChat.listen();
+
+    this.userList.init(userId => {
+      privateChat.start(userId);
+    });
 
     socket.init(WS_HOST);
     socket.registerOpenHandler(() => {
