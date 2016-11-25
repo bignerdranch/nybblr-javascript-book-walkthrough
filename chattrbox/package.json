@@ -10,7 +10,8 @@
     "build-server": "babel server/src -d server/dist",
     "build-client": "browserify -d app/scripts/src/main.js -o app/scripts/dist/main.js",
     "build": "npm run build-server && npm run build-client",
-    "watch": "watchify -v -d app/scripts/src/main.js -o app/scripts/dist/main.js"
+    "watch": "watchify -v -d app/scripts/src/main.js -o app/scripts/dist/main.js",
+    "postinstall": "npm run build"
   },
   "browserify": {
     "transform": [
@@ -24,7 +25,7 @@
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
     "babel-cli": "^6.16.0",
     "babel-core": "^6.17.0",
     "babel-preset-es2015": "^6.16.0",
@@ -39,9 +40,7 @@
     "nodemon": "^1.9.2",
     "watchify": "^3.7.0",
     "webrtc-adapter": "^2.0.4",
-    "wolfy87-eventemitter": "^5.1.0"
-  },
-  "dependencies": {
+    "wolfy87-eventemitter": "^5.1.0",
     "babel-polyfill": "^6.16.0",
     "dotenv": "^2.0.0",
     "koa": "^2.0.0-alpha.7",

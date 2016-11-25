@@ -1,0 +1,6 @@
+/.env
+/node_modules
+/app/scripts/dist/*
+!/app/scripts/dist/.keep
+/server/dist/*
+!/server/dist/.keep
