@@ -4,6 +4,7 @@ var signal = require('./signal');
 var api = require('./api');
 var auth = require('./auth');
 var VerifyClient = require('./verify-client');
+var { MONGODB_URI } = require('./db');
 
 var Koa = require('koa');
 var compress = require('koa-compress');
@@ -15,8 +16,9 @@ var convert = require('koa-convert');
 var session = require('koa-generic-session');
 var MongoStore = require('koa-generic-session-mongo')
 
+var PORT = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 3000;
+var IP = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 var SESSION_SECRET = process.env.SESSION_SECRET;
-var MONGODB_URI = process.env.MONGODB_URI;
 
 var app = new Koa();
 
@@ -47,4 +49,4 @@ var verifyClient = VerifyClient(extractSession);
 wss(server, verifyClient);
 signal(server, verifyClient, extractSession);
 
-server.listen(3000);
+server.listen(PORT, IP);

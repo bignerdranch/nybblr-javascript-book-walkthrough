@@ -1,4 +1,4 @@
-var MONGODB_URI = process.env.MONGODB_URI;
+var MONGODB_URI = process.env.MONGODB_URI || process.env.OPENSHIFT_MONGODB_DB_URL;
 
 var mongoose = require('mongoose');
 var findOrCreate = require('mongoose-findorcreate');
@@ -25,6 +25,7 @@ var MessageSchema = new Schema({
 var Message = mongoose.model('Message', MessageSchema);
 
 module.exports = {
+  MONGODB_URI,
   User,
   Message
 };
